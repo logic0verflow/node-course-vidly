@@ -1,4 +1,6 @@
 
+const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
@@ -7,6 +9,7 @@ const mongoose = require('mongoose');
 const home = require('./routes/home');
 const genres = require('./routes/genres');
 const movies = require('./routes/movies');
+const rentals = require('./routes/rentals');
 const customers = require('./routes/customers');
 
 app.use(express.json());
@@ -15,6 +18,7 @@ app.use(morgan('tiny'));
 app.use('/', home);
 app.use('/api/genres', genres);
 app.use('/api/movies', movies);
+app.use('/api/rentals', rentals);
 app.use('/api/customers', customers);
 
 mongoose.connect('mongodb://localhost/vidly')

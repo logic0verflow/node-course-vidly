@@ -35,7 +35,7 @@ router.post('/', (req, res) => {
       });
 
       movie.save()
-        .then(result => res.send(movie))
+        .then(movie => res.send(movie))
         .catch(err => console.error('Movie save error: ', err));
     })
     .catch(err => console.error('Error creating movie: genre not found...'));

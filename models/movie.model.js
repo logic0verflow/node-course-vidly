@@ -33,7 +33,7 @@ function validateMovie (movie) {
     title: Joi.string().min(2).max(255).required(),
     numberInStock: Joi.number(),
     dailyRentalRate: Joi.number(),
-    genreId: Joi.string().required()
+    genreId: Joi.objectId().required()
   }
 
   return Joi.validate(movie, schema);
