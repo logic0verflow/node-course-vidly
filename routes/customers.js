@@ -1,4 +1,5 @@
 
+const auth = require('../middleware/auth');
 const { Customer, validate } = require('../models/customer.model.js');
 const express = require('express');
 const router = express.Router();
@@ -15,7 +16,7 @@ router.get('/:id', (req, res) => {
     .catch(e => res.status(404).send('The customer with the given ID was not found.'));
 });
 
-router.post('/', (req, res) => {
+router.post('/', auth, (req, res) => {
   // validate input
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error['details'][0]['message']);
@@ -31,7 +32,7 @@ router.post('/', (req, res) => {
     .catch(e => console.error('Save error: ', e));
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', auth, (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error);
 
@@ -47,7 +48,7 @@ router.put('/:id', (req, res) => {
     .catch(() => res.status(404).send('The customer with the given ID was not found.'));
 });
 
-router.delete('/:id', (req,res) => {
+router.delete('/:id', auth, (req,res) => {
   Customer.findByIdAndRemove(req.params.id)
     .then(customer => {
       console.log('Removed: ', customer);

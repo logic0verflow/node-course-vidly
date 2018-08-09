@@ -1,3 +1,5 @@
+
+const auth = require('../middleware/auth');
 const express = require('express');
 const router = express.Router();
 const { Movie, validate } = require('../models/movie.model.js');
@@ -18,7 +20,7 @@ router.get('/:id', (req, res) => {
 });
 
 // Create new movie
-router.post('/', (req, res) => {
+router.post('/', auth, (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error['details'][0]['message']);
 
@@ -42,7 +44,7 @@ router.post('/', (req, res) => {
 });
 
 // Update a movie
-router.put('/:id', (req, res) => {
+router.put('/:id', auth, (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error['details'][0]['message']);
 
@@ -57,7 +59,7 @@ router.put('/:id', (req, res) => {
 });
 
 // Delete a movie
-router.delete('/:id', (req, res) => {
+router.delete('/:id', auth, (req, res) => {
   Movie.findByIdAndRemove(req.params.id)
     .then(result => res.send('Movie was removed successfully...'))
     .catch(err => console.error('Movie delete error: ', err));

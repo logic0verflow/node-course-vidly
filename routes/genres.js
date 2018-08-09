@@ -1,11 +1,15 @@
+
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 const { Genre, validate } = require('../models/genre.model.js')
 const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
+  throw new Error('Could not get the genres.');
   Genre.find()
     .sort('name')
-    .then((genres) => res.send(genres));
+    .then((genres) => res.send(genres))
 });
 
 router.get('/:id', (req, res) => {
@@ -14,7 +18,8 @@ router.get('/:id', (req, res) => {
     .catch((e) => res.status(404).send('The genre with the given ID was not found.'));
 });
 
-router.post('/', (req, res) => {
+router.post('/', auth, (req, res) => {
+
   // validate input
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error['details'][0]['message']);
@@ -32,7 +37,7 @@ router.post('/', (req, res) => {
     .catch((e) => console.error('Save error: ', e));
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', auth, (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error);
 
@@ -45,7 +50,7 @@ router.put('/:id', (req, res) => {
     .catch(() => res.status(404).send('The genre with the given ID was not found.'));
 });
 
-router.delete('/:id', (req,res) => {
+router.delete('/:id', [auth, admin], (req,res) => {
   Genre.findByIdAndRemove(req.params.id)
     .then((genre) => {
       console.log('Removed: ', genre);
