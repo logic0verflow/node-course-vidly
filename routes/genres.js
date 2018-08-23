@@ -1,9 +1,11 @@
 
+const validateObjectId = require('../middleware/validateObjectId');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const { Genre, validate } = require('../models/genre.model.js')
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 router.get('/', (req, res) => {
   Genre.find()
@@ -11,10 +13,13 @@ router.get('/', (req, res) => {
     .then((genres) => res.send(genres))
 });
 
-router.get('/:id', (req, res) => {
-  Genre.find({ _id: req.params.id })
-    .then((g) => res.send(g))
-    .catch((e) => res.status(404).send('The genre with the given ID was not found.'));
+router.get('/:id', validateObjectId, (req, res) => {
+  Genre.findById(req.params.id)
+    .then(genre => {
+      if (!genre) return res.status(404).send('The genre with the given ID was not found.')
+      res.send(genre);
+    })
+    // .catch((e) => res.status(404).send('The genre with the given ID was not found.'));
 });
 
 router.post('/', auth, (req, res) => {
@@ -30,7 +35,6 @@ router.post('/', auth, (req, res) => {
 
   genre.save()
     .then((result) => {
-      console.log(result);
       res.send(genre);
     })
     .catch((e) => console.error('Save error: ', e));
@@ -45,8 +49,10 @@ router.put('/:id', auth, (req, res) => {
         name: req.body.name
       }
     }, { new : true })
-    .then((genre) => res.send(genre))
-    .catch(() => res.status(404).send('The genre with the given ID was not found.'));
+    .then(genre => {
+      if (!genre) return res.status(404).send('The genre with the given ID was not found.');
+      res.send(genre)
+    })
 });
 
 router.delete('/:id', [auth, admin], (req,res) => {
