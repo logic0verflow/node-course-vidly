@@ -7,22 +7,29 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "jest --watchAll --verbose --coverage"
+    "test": "jest --watchAll --verbose",
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": "8.11.3"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^1.0.3",
+    "compression": "^1.7.2",
     "config": "^1.29.4",
     "express": "^4.16.3",
     "express-async-errors": "^2.1.0",
     "fawn": "^2.1.5",
+    "helmet": "^3.11.0",
     "jest": "^22.2.2",
     "joi": "^13.4.0",
     "joi-objectid": "^2.0.0",
     "jsonwebtoken": "^8.1.1",
     "lodash": "^4.17.5",
+    "moment": "^2.22.2",
     "mongoose": "^5.0.1",
     "morgan": "^1.9.0",
     "winston": "^2.4.0",
